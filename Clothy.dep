@@ -1,0 +1,89 @@
+# Microsoft Developer Studio Generated Dependency File, included by Clothy.mak
+
+.\AddSpher.cpp : \
+	".\AddSpher.h"\
+	".\Clothy.h"\
+	
+
+.\Clothy.cpp : \
+	".\Clothy.h"\
+	".\MainFrm.h"\
+	".\MathDefs.h"\
+	".\OGLView.h"\
+	".\PhysEnv.h"\
+	".\Skeleton.h"\
+	
+
+.\Clothy.rc : \
+	".\res\Clothy.ico"\
+	".\res\Clothy.rc2"\
+	
+
+.\LoadOBJ.cpp : \
+	".\LoadOBJ.h"\
+	".\MathDefs.h"\
+	".\Skeleton.h"\
+	
+
+.\MainFrm.cpp : \
+	".\Clothy.h"\
+	".\MainFrm.h"\
+	".\MathDefs.h"\
+	".\OGLView.h"\
+	".\PhysEnv.h"\
+	".\Skeleton.h"\
+	
+
+.\MathDefs.cpp : \
+	".\MathDefs.h"\
+	
+
+.\NewCloth.cpp : \
+	".\Clothy.h"\
+	".\NewCloth.h"\
+	
+
+.\OGLView.cpp : \
+	".\Clothy.h"\
+	".\LoadOBJ.h"\
+	".\MathDefs.h"\
+	".\NewCloth.h"\
+	".\OGLView.h"\
+	".\PhysEnv.h"\
+	".\Skeleton.h"\
+	".\TimeProps.h"\
+	
+
+.\PhysEnv.cpp : \
+	".\AddSpher.h"\
+	".\Clothy.h"\
+	".\MathDefs.h"\
+	".\PhysEnv.h"\
+	".\SetVert.h"\
+	".\SimProps.h"\
+	
+
+.\SetVert.cpp : \
+	".\Clothy.h"\
+	".\SetVert.h"\
+	
+
+.\SimProps.cpp : \
+	".\Clothy.h"\
+	".\SimProps.h"\
+	
+
+.\Skeleton.cpp : \
+	".\MathDefs.h"\
+	".\Skeleton.h"\
+	
+
+.\StdAfx.cpp : \
+	"..\..\..\devstudio\vc98\include\basetsd.h"\
+	".\StdAfx.h"\
+	
+
+.\TimeProps.cpp : \
+	".\Clothy.h"\
+	".\TimeProps.h"\
+	

@@ -1,0 +1,46 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Clothy - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\me.WIN\LOCALS~1\Temp\RSP991.tmp" with contents
+[
+/nologo /MTd /W3 /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /FR"Debug/" /Fp"Debug/Clothy.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"C:\Documents and Settings\me\Desktop\Jeff Lander Deform Sample\Cloth Simulation\OGLView.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\me.WIN\LOCALS~1\Temp\RSP991.tmp" 
+Creating temporary file "C:\DOCUME~1\me.WIN\LOCALS~1\Temp\RSP992.tmp" with contents
+[
+dsound.lib winmm.lib opengl32.lib glu32.lib glaux.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/Clothy.pdb" /debug /machine:I386 /out:"Debug/Clothy.exe" /pdbtype:sept 
+".\Debug\AddSpher.obj"
+".\Debug\Clothy.obj"
+".\Debug\LoadOBJ.obj"
+".\Debug\MainFrm.obj"
+".\Debug\MathDefs.obj"
+".\Debug\NewCloth.obj"
+".\Debug\OGLView.obj"
+".\Debug\PhysEnv.obj"
+".\Debug\SetVert.obj"
+".\Debug\SimProps.obj"
+".\Debug\Skeleton.obj"
+".\Debug\StdAfx.obj"
+".\Debug\TimeProps.obj"
+".\Debug\Clothy.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\me.WIN\LOCALS~1\Temp\RSP992.tmp"
+<h3>Output Window</h3>
+Compiling...
+OGLView.cpp
+C:\Documents and Settings\me\Desktop\Jeff Lander Deform Sample\Cloth Simulation\OGLView.cpp(328) : warning C4700: local variable 'DeltaTime' used without having been initialized
+Linking...
+
+
+
+<h3>Results</h3>
+Clothy.exe - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>

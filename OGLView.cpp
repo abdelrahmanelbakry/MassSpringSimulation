@@ -40,7 +40,7 @@ COGLView::COGLView()
 
 	m_TimeIterations = 10;
 	m_UseFixedTimeStep = TRUE;
-	m_MaxTimeStep = 0.01f;
+	m_MaxTimeStep = 0.3f;
 
 	m_FrameCnt = 0;
 

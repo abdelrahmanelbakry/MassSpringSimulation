@@ -96,7 +96,7 @@ public:
 	void FreeSystem();
 	void LoadData(FILE *fp);
 	void SaveData(FILE *fp);
-	void	AddCollisionSphere();
+	void AddCollisionSphere();
 	BOOL				m_UseGravity;			// SHOULD GRAVITY BE ADDED IN
 	BOOL				m_UseDamping;			// SHOULD DAMPING BE ON
 	BOOL				m_UserForceActive;		// WHEN USER FORCE IS APPLIED
@@ -138,6 +138,7 @@ private:
 // Operations
 private:
 	inline void	IntegrateSysOverTime(tParticle *initial,tParticle *source, tParticle *target, float deltaTime);
+	inline void IntegrateSysOverTime(tParticle *source,tParticle* k, float deltaTime);
 	void	RK4Integrate( float DeltaTime);
 	void	RK4AdaptiveIntegrate( float DeltaTime);
 	void	MidPointIntegrate( float DeltaTime);

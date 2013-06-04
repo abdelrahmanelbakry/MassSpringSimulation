@@ -104,6 +104,7 @@ BEGIN
         MENUITEM "Heun",                        ID_INTEGRATOR_HEUN
         MENUITEM "&Runge-Kutta4",               ID_INTRK4
         MENUITEM "Adaptive RK4",                ID_INTEGRATOR_ADAPTIVERK4
+        MENUITEM "&Fehlberg",                   ID_INTEGRATOR_FEHLBERG
     END
     POPUP "&Help"
     BEGIN

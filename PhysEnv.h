@@ -9,6 +9,8 @@
 #include "MathDefs.h"
 
 #define EPSILON  0.00001f				// ERROR TERM
+#define EMAX    0.0004
+#define ECON    0.0002
 #define DEFAULT_DAMPING		0.002f
 
 enum tCollisionTypes
@@ -24,7 +26,8 @@ enum tIntegratorTypes
 	MIDPOINT_INTEGRATOR,
 	RK4_INTEGRATOR,
 	RK4_ADAPTIVE_INTEGRATOR,
-	HEUN_INTEGRATOR
+	HEUN_INTEGRATOR,
+	FEHLBERG
 };
 
 
@@ -135,6 +138,11 @@ private:
 	tVector				m_MouseDragPos[2];		// POSITION OF DRAGGED MOUSE VECTOR
 	tCollisionSphere	*m_Sphere;
 	int					m_SphereCnt;
+	int                 m_MaxIterationsCount;
+	float               m_RelativeError;
+	int                 m_IterationNumber;
+	float               m_Step;
+	
 // Operations
 private:
 	inline void	IntegrateSysOverTime(tParticle *initial,tParticle *source, tParticle *target, float deltaTime);
@@ -144,11 +152,12 @@ private:
 	void	MidPointIntegrate( float DeltaTime);
 	void	HeunIntegrate( float DeltaTime);
 	void	EulerIntegrate( float DeltaTime);
+	void	FehlbergIntegrate( float DeltaTime);
 	void	ComputeForces( tParticle	*system );
 	int		CheckForCollisions( tParticle	*system );
 	void	ResolveCollisions( tParticle	*system );
 	void	CompareBuffer(int size, float *buffer,float x, float y);
-
+	void    Copy(tParticle* source,tParticle* destination);
 // Implementation
 public:
 	virtual ~CPhysEnv();

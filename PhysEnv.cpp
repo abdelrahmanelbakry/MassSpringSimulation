@@ -17,6 +17,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+
+
 #pragma warning (disable:4244)      // I NEED TO CONVERT FROM DOUBLE TO FLOAT
 
 /////////////////////////////////////////////////////////////////////////////
@@ -92,7 +94,10 @@ CPhysEnv::CPhysEnv()
 	m_CollisionPlane[5].d = m_WorldSizeZ / 2.0f;
 
 	m_SphereCnt = 0;
-
+	
+	m_MaxIterationsCount = 5;
+	m_IterationNumber=0;
+	m_Step = 0.01;
 }
 
 CPhysEnv::~CPhysEnv()
@@ -784,6 +789,88 @@ void CPhysEnv::HeunIntegrate( float DeltaTime)
 	// Your Code Here
 }
 
+
+void CPhysEnv::FehlbergIntegrate( float deltaTime)
+{
+	float a2=0.2,a3=0.3,a4=0.6,a5=1,a6=0.875,b21=0.2,b31=3.0/40.0,b32=9.0/40.0,b41=0.3,b42=-0.9,
+		b43=1.2,b51=-11.0/54.0,b52=2.5,b53=-70.0/27.0,b54=35.0/27.0,b61=1631.0/55296.0,b62=175.0/512.0,
+		b63=575.0/13824.0,b64=44275.0/110592.0,b65=253.0/4096.0,c1=37.0/378.0,c3=250.0/621.0,c4=125.0/594.0,
+		c6=512.0/1771.0;
+	float dc1= c1 - 2825.0/27648.9, dc3 = c3 - 18575.0/48384.0, dc4 = c4- 13525.0/55296.0,
+		dc5= -277.0/14336.0,dc6=c6- 0.25;
+	
+	tParticle* target, * source,*k1,*k2,*k3,*k4;
+	/////////////////////////////////////////////////////////////////////////////////
+	//First Step
+	//////////////////////////////////////////////////////////////////////////////////
+	target = m_TempSys[0];
+	source = m_CurrentSys;
+	k1 = m_TempSys[1];
+	for (int loop = 0; loop < m_ParticleCnt; loop++)
+	{
+		// DETERMINE THE NEW VELOCITY FOR THE PARTICLE
+		k1->f.x = deltaTime * source->f.x * source->oneOverM * b21;
+		k1->f.y = deltaTime * source->f.y * source->oneOverM * b21;
+		k1->f.z = deltaTime * source->f.z * source->oneOverM * b21;
+
+		k1->v.x = deltaTime * source->v.x * b21;   
+        k1->v.y = deltaTime * source->v.y * b21;   
+        k1->v.z = deltaTime * source->v.z * b21;   
+		
+		target->v.x = source->v.x + (k1->f.x);   
+        target->v.y = source->v.y + (k1->f.y);   
+        target->v.z = source->v.z + (k1->f.z);   
+   
+        target->oneOverM = source->oneOverM;   
+   
+        // SET THE NEW POSITION   
+        target->pos.x = source->pos.x + (k1->v.x);   
+        target->pos.y = source->pos.y + (k1->v.y);   
+        target->pos.z = source->pos.z + (k1->v.z);
+
+		source++;
+		target++;
+		k1++;
+	}
+	//Update the forces
+	ComputeForces(m_TempSys[0]);
+
+    /////////////////////////////////////////////////////////////////////////////////
+	//Second Step
+	//////////////////////////////////////////////////////////////////////////////////
+	target = m_TempSys[0];
+	source = m_CurrentSys;
+	k1 = m_TempSys[2];
+	for (int loop = 0; loop < m_ParticleCnt; loop++)
+	{
+		// DETERMINE THE NEW VELOCITY FOR THE PARTICLE
+		k1->f.x = deltaTime * source->f.x * source->oneOverM * b21;
+		k1->f.y = deltaTime * source->f.y * source->oneOverM * b21;
+		k1->f.z = deltaTime * source->f.z * source->oneOverM * b21;
+
+		k1->v.x = deltaTime * source->v.x * b21;   
+        k1->v.y = deltaTime * source->v.y * b21;   
+        k1->v.z = deltaTime * source->v.z * b21;   
+		
+		target->v.x = source->v.x + (k1->f.x);   
+        target->v.y = source->v.y + (k1->f.y);   
+        target->v.z = source->v.z + (k1->f.z);   
+   
+        target->oneOverM = source->oneOverM;   
+   
+        // SET THE NEW POSITION   
+        target->pos.x = source->pos.x + (k1->v.x);   
+        target->pos.y = source->pos.y + (k1->v.y);   
+        target->pos.z = source->pos.z + (k1->v.z);
+
+		source++;
+		target++;
+		k1++;
+	}
+	//Update the forces
+	ComputeForces(m_TempSys[0]);
+
+}
 ///////////////////////////////////////////////////////////////////////////////
 // Function:	IntegrateSysOverTime 
 // Purpose:		Does the Integration for all the points in a system
@@ -798,6 +885,7 @@ void CPhysEnv::IntegrateSysOverTime(tParticle *source,tParticle* k, float deltaT
 ///////////////////////////////////////////////////////////////////////////////
 	for (loop = 0; loop < m_ParticleCnt; loop++)
 	{
+		k->oneOverM = source->oneOverM;
 		// DETERMINE THE NEW VELOCITY FOR THE PARTICLE
 		k->f.x = deltaTime * source->f.x * source->oneOverM;
 		k->f.y = deltaTime * source->f.y * source->oneOverM;
@@ -935,6 +1023,23 @@ void CPhysEnv::RK4Integrate( float DeltaTime)
 	}
 }
 
+
+void CPhysEnv::Copy(tParticle* source,tParticle* destination)
+{
+	for(int i=0;i<m_ParticleCnt;i++,source++,destination++)
+	{
+		destination->pos.x = source->pos.x;
+		destination->pos.y = source->pos.x;
+		destination->pos.z = source->pos.x;
+		destination->v.x = source->v.x;
+		destination->v.y = source->v.y;
+		destination->v.z = source->v.z;
+		destination->f.x = source->f.x;
+		destination->f.y = source->f.y;
+		destination->f.z = source->f.z;
+	
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////
 // Function:	RK4AdaptiveIntegrate 
 // Purpose:		Calculate new Positions and Velocities given a deltatime
@@ -943,42 +1048,107 @@ void CPhysEnv::RK4Integrate( float DeltaTime)
 ///////////////////////////////////////////////////////////////////////////////
 void CPhysEnv::RK4AdaptiveIntegrate( float DeltaTime)  
 {
-	// Your Code Here
-	//First Call the RK4 using the whole step
-	RK4Integrate(DeltaTime);
-	
-	tParticle *temp = m_TempSys[0];
-	tParticle *iterator = m_TargetSys;
-	//Copy the Target System into one of the temp systems.
-	for(int i=0;i<m_ParticleCnt;i++)
+	float currentX=0;
+
+	while(m_IterationNumber!= m_MaxIterationsCount)
 	{
-		temp = iterator;
-		temp++;
-		iterator++;
-	}
-	//Then we make two calls with half the step
-	RK4Integrate(DeltaTime/2.0);
-	temp = m_TempSys[1];
-	iterator = m_TargetSys;
-	//Copy the Target System into one of the temp systems.
-	for(int i=0;i<m_ParticleCnt;i++)
-	{
-		temp = iterator;
-		temp++;
-		iterator++;
+		m_IterationNumber++;
+		// Your Code Here
+		m_RelativeError=0;
+		currentX += m_Step;    
+		//First Call the RK4 using the whole step
+		RK4Integrate(currentX);
+		
+		currentX-=m_Step;
+		tParticle* firstPrediction = new tParticle[m_ParticleCnt];
+
+		//tParticle* firsthalf = new tParticle[m_ParticleCnt];
+		tParticle* secondhalf = new tParticle[m_ParticleCnt];
+
+		//tParticle *iterator = m_TargetSys;
+		//Copy the Target System into one of the temp systems.
+		/*
+		for(int i=0;i<m_ParticleCnt;i++)
+			firstPrediction[i] = m_TargetSys[i];
+		*/
+		Copy(m_TargetSys,firstPrediction);
+		
+		currentX += m_Step/2.0;   
+		//Then we make two calls with half the step
+		RK4Integrate(currentX);
+		currentX -= m_Step/2.0;
+		currentX += m_Step; 
+		//Copy the Target System into one of the temp systems.
+		/*
+		for(int i=0;i<m_ParticleCnt;i++)
+			m_CurrentSys[i] = m_TargetSys[i];
+		*/
+		Copy(m_TargetSys,m_CurrentSys);
+
+		RK4Integrate(currentX);
+		
+		//Copy the Target System into one of the temp systems.
+		Copy(m_TargetSys,secondhalf);
+		/*
+		for(int i=0;i<m_ParticleCnt;i++)
+			secondhalf[i] = m_TargetSys[i];
+		*/
+		//Then Calculate the error
+		tParticle* correction =  new tParticle[m_ParticleCnt];
+
+		//Copy the Target System into one of the temp systems.
+		for(int i=0;i<m_ParticleCnt;i++)
+		{
+			correction[i].pos.x = (secondhalf[i].pos.x - firstPrediction[i].pos.x)/15;
+			correction[i].pos.y = (secondhalf[i].pos.y - firstPrediction[i].pos.y)/15;
+			correction[i].pos.z = (secondhalf[i].pos.z - firstPrediction[i].pos.z)/15;
+
+			m_RelativeError+= fabs(correction[i].pos.x+ correction[i].pos.y + correction[i].pos.z);
+			
+			secondhalf[i].pos.x += correction[i].pos.x;
+			secondhalf[i].pos.y += correction[i].pos.y;
+			secondhalf[i].pos.z += correction[i].pos.z;
+		}
+		m_RelativeError/=m_ParticleCnt;
+
+		/*
+		for(int i=0;i<m_ParticleCnt;i++)
+			m_CurrentSys[i] = secondhalf[i] ;
+		*/
+		Copy(secondhalf,m_CurrentSys);
+
+		//Check the relative error
+		if(m_RelativeError>EPSILON)
+			//Since We have a high error so it is more logical that we want to lower the step size
+			m_Step = m_Step * pow ((double) fabs (EPSILON / m_RelativeError), 0.25);
+		else
+		{
+			/*
+			for(int i=0;i<m_ParticleCnt;i++)
+				m_TargetSys[i] = secondhalf[i] ;*/
+			Copy(secondhalf,m_TargetSys);
+			break;
+		}
+		currentX+=m_Step;
+
+		if(currentX>=DeltaTime)
+		{
+			/*
+			for(int i=0;i<m_ParticleCnt;i++)
+				m_TargetSys[i] = secondhalf[i] ;*/
+			Copy(secondhalf,m_TargetSys);
+			break;
+		}
+		delete[] secondhalf;
+		delete[] firstPrediction;
 	}
 
-	RK4Integrate(DeltaTime/2.0);
-	temp = m_TempSys[2];
-	iterator = m_TargetSys;
-	//Copy the Target System into one of the temp systems.
-	for(int i=0;i<m_ParticleCnt;i++)
-	{
-		temp = iterator;
-		temp++;
-		iterator++;
-	}
-	//Then Calculate the error
+	if(m_RelativeError<ECON)
+		//So we will need to increase the step size
+		m_Step = m_Step * pow ((double) fabs (EPSILON / m_RelativeError), 0.2);
+	
+	m_IterationNumber=0;
+
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1131,6 +1301,9 @@ void CPhysEnv::Simulate(float DeltaTime, BOOL running)
 					break;
 				case RK4_ADAPTIVE_INTEGRATOR:
 					RK4AdaptiveIntegrate(TargetTime-CurrentTime);
+					break;
+				case FEHLBERG:
+					FehlbergIntegrate(TargetTime-CurrentTime);
 					break;
 				}
 			}

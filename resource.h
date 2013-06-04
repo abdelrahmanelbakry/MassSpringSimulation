@@ -88,6 +88,7 @@
 #define ID_SIMULATION_ADDCOLLISIONSPHERE 32797
 #define ID_INTEGRATOR_HEUN              32798
 #define ID_INTEGRATOR_ADAPTIVERK4       32799
+#define ID_INTEGRATOR_FEHLBERG          32800
 #define ID_INDICATOR_ROT2               59142
 #define ID_INDICATOR_QUAT               59143
 #define ID_INDICATOR_ROT                59144
@@ -99,7 +100,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        139
-#define _APS_NEXT_COMMAND_VALUE         32800
+#define _APS_NEXT_COMMAND_VALUE         32801
 #define _APS_NEXT_CONTROL_VALUE         1015
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

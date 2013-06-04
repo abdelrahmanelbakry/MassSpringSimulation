@@ -63,6 +63,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_INTEGRATOR_HEUN, &CMainFrame::OnUpdateIntegratorHeun)
 	ON_COMMAND(ID_INTEGRATOR_ADAPTIVERK4, &CMainFrame::OnIntegratorAdaptiverk4)
 	ON_UPDATE_COMMAND_UI(ID_INTEGRATOR_ADAPTIVERK4, &CMainFrame::OnUpdateIntegratorAdaptiverk4)
+	ON_COMMAND(ID_INTEGRATOR_FEHLBERG, &CMainFrame::OnIntegratorFehlberg)
+	ON_UPDATE_COMMAND_UI(ID_INTEGRATOR_FEHLBERG, &CMainFrame::OnUpdateIntegratorFehlberg)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -438,6 +440,17 @@ void CMainFrame::OnIntegratorAdaptiverk4()
 {
 	m_OGLView.m_PhysEnv.m_IntegratorType = RK4_ADAPTIVE_INTEGRATOR;
 	m_OGLView.Invalidate(TRUE);
+}
+
+void CMainFrame::OnIntegratorFehlberg()
+{
+	m_OGLView.m_PhysEnv.m_IntegratorType = FEHLBERG;
+	m_OGLView.Invalidate(TRUE);
+}
+
+void CMainFrame::OnUpdateIntegratorFehlberg(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck( m_OGLView.m_PhysEnv.m_IntegratorType == FEHLBERG );
 }
 
 void CMainFrame::OnUpdateIntegratorAdaptiverk4(CCmdUI *pCmdUI)

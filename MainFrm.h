@@ -100,6 +100,10 @@ public:
 	afx_msg void OnIntegratorAdaptiverk4();
 public:
 	afx_msg void OnUpdateIntegratorAdaptiverk4(CCmdUI *pCmdUI);
+public:
+	afx_msg void OnIntegratorFehlberg();
+public:
+	afx_msg void OnUpdateIntegratorFehlberg(CCmdUI *pCmdUI);
 };
 
 /////////////////////////////////////////////////////////////////////////////
